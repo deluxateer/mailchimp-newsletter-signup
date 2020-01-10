@@ -2,7 +2,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 
-const { APIKey, listID } = require('./secrets')
+const secretData = require('./secrets')
+const APIKey = process.env.APIKey || secretData.APIKey
+const listID = process.env.listID || secretData.listID
 
 const app = express()
 app.use(express.static('public'))
@@ -36,7 +38,7 @@ app.post('/', function(req, res) {
     headers: {
       "Authorization": `someGuy ${APIKey}`
     },
-    // body: jsonData
+    body: jsonData
   }
 
   request(options, function(error, response, body) {
@@ -56,7 +58,7 @@ app.post('/failure', function(req, res) {
   res.redirect('/')
 })
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, function() {
   console.log(`Server is running on port ${port}`)
